@@ -3,9 +3,9 @@
 #include <timeObj.h>
 
 
-
+#ifdef TEENSYDUINO
 uint8_t		rx_buffer[255-64];	// On teensy you can add memory to the incoming serial message buffer.
-
+#endif
 
 numStreamIn::numStreamIn(Stream* inStream,int tokenBuffBytes) {
    
@@ -22,7 +22,9 @@ numStreamIn::numStreamIn(Stream* inStream,int tokenBuffBytes) {
    if (resizeBuff(MAX_MSG_BYTES,&msgBuf)) {
    	msgBufBytes = MAX_MSG_BYTES;
    }
+#ifdef TEENSYDUINO
    Serial1.addMemoryForRead(rx_buffer, sizeof(rx_buffer));
+#endif
    reset();
 }
 
@@ -30,15 +32,15 @@ numStreamIn::numStreamIn(Stream* inStream,int tokenBuffBytes) {
 numStreamIn::~numStreamIn(void) {
 
 	resizeBuff(0,&tokenBuff);
-	
+	resizeBuff(0,&msgBuf); 
 }
 
 
 void numStreamIn::begin(void) {
 
-	if (tokenBuff) {	// If we were able to allocate our token buffer..
-		hookup();		// We can fire up the machine.
-	}						//
+	if (tokenBuff && msgBuf) {	// If we were able to allocate our buffers..
+		hookup();					// We can fire up the machine.
+	}									//
 }
 
 
