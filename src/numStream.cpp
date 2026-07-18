@@ -2,6 +2,7 @@
 #include <resizeBuff.h>
 #include <timeObj.h>
 
+#include <debug.h>
 
 #ifdef TEENSYDUINO
 uint8_t		rx_buffer[255-64];	// On teensy you can add memory to the incoming serial message buffer.
@@ -177,7 +178,7 @@ exitStates numStreamIn::readToken(void) {
 
 // This is what we do to earn our living. Sip on a stream and parcel out tokens.
 void numStreamIn::idle(void) {
-   
+	
    switch(ourState) {													// What are we up to?
    	case lookForSynk	:												// We're looking for the synk char.
    		switch(findSynkChar()) {									// Why did we stop looking for a synk char?
