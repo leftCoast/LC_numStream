@@ -2,7 +2,7 @@
 #include <resizeBuff.h>
 #include <timeObj.h>
 
-#include <debug.h>
+//#include <debug.h>
 
 #ifdef TEENSYDUINO
 uint8_t		rx_buffer[255-64];	// On teensy you can add memory to the incoming serial message buffer.
@@ -126,7 +126,7 @@ exitStates numStreamIn::findSynkChar(void) {
 }
 
 
-// We're (think) we are sitting at the start or middle of a data string. Grab a parameter!
+// We're, we think, sitting at the start or middle of a data string. Grab a parameter!
 exitStates numStreamIn::readToken(void) {
 
 	timeObj	timoutTimer(MAX_MS);
@@ -174,7 +174,6 @@ exitStates numStreamIn::readToken(void) {
 	return erroredOut;									// If we time out we end up here. Toss error and give up.
 }
 			
-
 
 // This is what we do to earn our living. Sip on a stream and parcel out tokens.
 void numStreamIn::idle(void) {
@@ -245,37 +244,37 @@ void numStreamIn::errMsg(errType inErr) {
 #ifdef SHOW_DATA																// Are we allowing debugging data today?
 	switch(inErr) {															// Choose the message..
 		case unknownErr		:
-			Serial.println("***** Unknown error?");
+			Serial.println(F("***** Unknown error?"));
 		break;
 		case synkTimOut		:													
-			Serial.println("***** findSynkChar() timed out.");	
+			Serial.println(F("***** findSynkChar() timed out."));	
 		break;
 		case tokenTimOut		:													
-			Serial.println("***** readToken() timed out.");	
+			Serial.println(F("***** readToken() timed out."));	
 		break;																	
    	case noHandler			:
-   		Serial.print("***** Cannot find handler for [");
+   		Serial.print(F("***** Cannot find handler for ["));
 			Serial.print(tokenBuff);
-			Serial.println("]");
+			Serial.println(F("]"));
 		break;
 		case addValueFail		:
-   		Serial.print("***** addValue() failed for [");
+   		Serial.print(F("***** addValue() failed for ["));
 			Serial.print(tokenBuff);
-			Serial.println("]");
+			Serial.println(F("]"));
 		break;
 		case badChecksum		:
-			Serial.print("***** checkTheSum() failed for [");
+			Serial.print(F("***** checkTheSum() failed for ["));
 			Serial.print(msgBuf);
-			Serial.println("]");
+			Serial.println(F("]"));
 		break;
 		case tokenOverflow	:
-			Serial.println("***** tokenBuff overflow.");	
+			Serial.println(F("***** tokenBuff overflow."));	
 		break;
 		case msgBufOverflow	:
-			Serial.println("***** msgBuf overflow.");	
+			Serial.println(F("***** msgBuf overflow."));	
 		break;
 		default					:
-			Serial.println("***** Some new kind of error we don't know about yet?");
+			Serial.println(F("***** Some new kind of error we don't know about yet?"));
 		break;	
 	}
 #endif
