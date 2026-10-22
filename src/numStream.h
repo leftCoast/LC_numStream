@@ -71,6 +71,7 @@ class numStreamIn : public idler {
 	virtual  bool  		addValue(char* param,int paramIndex,bool isLast);	
 	virtual	bool			dataChar(char inChar);
 	virtual	bool			checkTheSum(void);
+	virtual	bool			getSpew(void);
 	virtual	void			setSpew(bool onOff);
 	virtual	exitStates	findSynkChar(void);
 	virtual	exitStates	readToken(void);

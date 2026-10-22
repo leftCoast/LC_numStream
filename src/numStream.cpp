@@ -4,29 +4,34 @@
 
 //#include <debug.h>
 
-#ifdef TEENSYDUINO
-uint8_t		rx_buffer[255-64];	// On teensy you can add memory to the incoming serial message buffer.
-#endif
+
+
+// On Teensys one can add memory to the incoming serial message buffer.
+#ifdef TEENSYDUINO					// Because things like GPS messages can be long..
+uint8_t		rx_buffer[255-64];	// And some of our code (Doing GUI stuff) can block..
+#endif									// We max it out!
+
+
 
 numStreamIn::numStreamIn(Stream* inStream,int tokenBuffBytes) {
    
-   ourPort		= inStream;
-   spew			= true;
-   tokenBytes	= 0;
-   tokenBuff	= NULL;
-	if (resizeBuff(tokenBuffBytes,&tokenBuff)) {
-		tokenBuff[0] = '\0';
-      tokenBytes = tokenBuffBytes;
-   }
-   msgBufBytes = 0;
-   msgBuf		= NULL;
-   if (resizeBuff(MAX_MSG_BYTES,&msgBuf)) {
-   	msgBufBytes = MAX_MSG_BYTES;
-   }
-#ifdef TEENSYDUINO
-   Serial1.addMemoryForRead(rx_buffer, sizeof(rx_buffer));
-#endif
-   reset();
+   ourPort		= inStream;												// Save off the port we're going to use.
+   spew			= true;													// Default spewing to true?
+   tokenBytes	= 0;														// Default this to 0 just in case we fail.
+   tokenBuff	= NULL;													// Start all pointers with NULL.
+	if (resizeBuff(tokenBuffBytes,&tokenBuff)) {					// If we can allocate the token buffer.
+		tokenBuff[0] = '\0';												// Null out the string.
+      tokenBytes = tokenBuffBytes;									// Note it's size.
+   }																			// 
+   msgBufBytes = 0;														// Default this to 0 just in case we fail.
+   msgBuf		= NULL;													// Start all pointers with NULL.
+   if (resizeBuff(MAX_MSG_BYTES,&msgBuf)) {						// If we can allocate the message  buffer.
+   	msgBufBytes = MAX_MSG_BYTES;									// We then set the bytes to the allocated size.
+   }																			// 
+#ifdef TEENSYDUINO														// Do the Teensy buffer buffer resize.
+   Serial1.addMemoryForRead(rx_buffer, sizeof(rx_buffer));	// As said before, we max it out.
+#endif																		// 
+   reset();																	// Reset to set up for a new message.
 }
 
 
@@ -96,6 +101,10 @@ bool numStreamIn::checkTheSum(void) {
 	}																//
 	return false;												// No astrick!	
 }
+
+
+// This is how spew is set now..
+bool numStreamIn::getSpew(void) { return spew; }
 
 
 // True we send every char we see out the serial port. False, we don't.
